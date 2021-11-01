@@ -2438,7 +2438,8 @@ void TGlauberMC::Run(Int_t nevents, Double_t b)
 
   for (Int_t i = 0; i<nevents; ++i) {
     idEvent = i+1;
-    while (!NextEvent(b)) {}
+    if (ifDCMSMM) NextEvent(b);
+    else while (!NextEvent(b)) {}
     fNt->Fill((Float_t*)(&fEv.Npart));
     if ((i>0)&&(i%100)==0) 
       cout << "Event # " << i << " x-sect = " << GetTotXSect() << " +- " << GetTotXSectErr() << " b        \r" << flush;

@@ -17,20 +17,21 @@ using namespace std;
 
 vector<TLorentzVector> readNucleonsPositions(char* inFile, Int_t nEvents, Int_t Event, Int_t fA, Bool_t ifImpactParameter = false)
 {
-    TChain* fChain=new TChain("events");
-    fChain->Add(Form("%s/dcmqgsm_%d.root", inFile, 1+(Event-1)/nEvents));
+    TFile *fIn = new TFile(inFile, "read");
+    TTree *fTree = (TTree*) fIn->Get("events");
     vector<TLorentzVector> Positions;
     TLorentzVector NucleonPosition;
     UEvent* fEvent = new UEvent;
     EventInitialState* fIniState = new EventInitialState;
-    fChain->SetBranchAddress("event", &fEvent); 
-    fChain->SetBranchAddress("iniState", &fIniState);
-    fChain->GetEntry(Event);
+    fTree->SetBranchAddress("event", &fEvent); 
+    fTree->SetBranchAddress("iniState", &fIniState);
+    fTree->GetEntry(Event-1);
     
     if(ifImpactParameter)
     {
         TLorentzVector ImpactParameter(fEvent->GetBx(),fEvent->GetBy(),0.,0.);
         Positions.push_back(ImpactParameter);
+        fIn->Close();
         return Positions;
     }
     else 
@@ -46,6 +47,7 @@ vector<TLorentzVector> readNucleonsPositions(char* inFile, Int_t nEvents, Int_t 
             NucleonPosition.SetXYZT((fIniState->getNucleon(nucleonIndex+1)).getPosition().Px()+fEvent->GetBx()/2, (fIniState->getNucleon(nucleonIndex+1)).getPosition().Py()+fEvent->GetBy()/2, (fIniState->getNucleon(nucleonIndex+1)).getPosition().Pz(), 0.);
             Positions.push_back(NucleonPosition);
         }
+        fIn->Close();
         return Positions;
     }  
 }

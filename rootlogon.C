@@ -1,5 +1,4 @@
 {
-    gSystem->Load("/home/isegal/mcini/build/libMcIniData.so");
-    gSystem->Load("/home/isegal/root/lib/libMathMore.so");
+    gSystem->Load("/lustre/cbm/users/isegal/soft/mcini/build/libMcIniData.so");
     gROOT->LoadMacro("runglauber_v3.2.C+");
 }
